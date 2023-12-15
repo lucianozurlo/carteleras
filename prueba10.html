@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Carousel Bootstrap</title>
+  <!-- Agrega las bibliotecas de Bootstrap -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Establece la altura del carrusel al 100% del viewport */
+    #carouselExample {
+      height: 100vh;
+    }
+
+    /* Asegúrate de que las imágenes ocupen toda la altura y ancho del carrusel */
+    .carousel-inner img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="carouselExample" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="imga1.jpg" class="d-block w-100" alt="Primera imagen">
+      </div>
+      <div class="carousel-item">
+        <img src="imga2.jpg" class="d-block w-100" alt="Segunda imagen">
+      </div>
+      <div class="carousel-item">
+        <img src="imga3.jpg" class="d-block w-100" alt="Tercera imagen">
+      </div>
+    </div>
+  </div>
+
+  <!-- Agrega las bibliotecas de Bootstrap y jQuery (necesario para el funcionamiento del carousel) -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  <!-- Script adicional para hacer el bucle infinito sin retroceso -->
+  <script>
+    $(document).ready(function () {
+      var $carousel = $('#carouselExample');
+      $carousel.carousel({ interval: 3000 });
+
+      // Reinicia el carrusel cuando se llega al final sin retroceso
+      $carousel.on('slid.bs.carousel', function () {
+        var currentIndex = $('div.active').index();
+        var itemsLength = $('.carousel-item').length;
+
+        // Si es el último elemento, mueve el primer elemento al final
+        if (currentIndex === itemsLength - 1) {
+          $('.carousel-item').first().appendTo($carousel.find('.carousel-inner'));
+        }
+      });
+
+      // Agrega un número aleatorio como parámetro de consulta para forzar la recarga
+      $('img').each(function () {
+        var originalSrc = $(this).attr('src');
+        $(this).attr('src', originalSrc + '?' + Math.random());
+      });
+
+      // Borra la caché antes de cerrar o recargar la página
+      $(window).on('beforeunload', function () {
+        $('img').each(function () {
+          var originalSrc = $(this).attr('src').split('?')[0]; // Elimina el parámetro de consulta existente
+          $(this).attr('src', originalSrc + '?' + Math.random());
+        });
+      });
+    });
+  </script>
+
+</body>
+
+</html>
